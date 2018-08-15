@@ -1,0 +1,10 @@
+backend "consul" {
+  address = "{{ vault_consul }}"
+  path = "{{ vault_consul_path }}"
+}
+
+listener "tcp" {
+ address = "{{ vault_address}}:{{ vault_port }}"
+ tls_cert_file = "/etc/vault.d/ssl/vault.cert"
+ tls_key_file = "/etc/vault.d/ssl/vault.key"
+}

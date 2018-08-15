@@ -1,0 +1,12 @@
+[Unit]
+Description=vault server
+Requires=network-online.target
+After=network-online.target consul.service
+
+[Service]
+Restart=on-failure
+ExecStart=/opt/vault/bin/vault server $OPTIONS -config=/etc/vault.d
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

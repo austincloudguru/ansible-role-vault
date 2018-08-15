@@ -1,2 +1,130 @@
 ---
-# tasks file for ansible-role-vault
+- name: Create Vault group
+  group:
+    name: "{{ vault_group }}"
+    gid: "{{ vault_gid }}"
+    state: present
+
+- name: Create Vault User
+  user:
+    name: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    uid: "{{ vault_uid }}"
+    state: present
+
+- name: Create Configuration Directories
+  file:
+    path: /etc/vault.d
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+    state: directory
+
+- name: Create ssl Directories
+  file:
+    path: /etc/vault.d/ssl
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+    state: directory
+
+- name: Copy Cert File
+  copy:
+    content: "{{ vault_cert }}"
+    dest: /etc/vault.d/ssl/vault.cert
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0640
+    backup: yes
+
+- name: Copy Cert Key
+  copy:
+    content: "{{ vault_key }}"
+    dest: /etc/vault.d/ssl/vault.key
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0640
+    backup: yes
+
+- name: Create Vault Data Directory
+  file:
+    path: /var/vault
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+    state: directory
+
+- name: Create Vault Directory
+  file:
+    path: /opt/vault/bin
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+    state: directory
+
+- name: Create Vault Log Directory
+  file:
+    path: /var/log/vault
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+    state: directory
+
+- name: Check Version Installed
+  shell: >
+         /opt/vault/bin/vault --version|head -1 |cut -dv -f2|cut -d' ' -f1
+  register: vault_version_check
+  changed_when: vault_version_check.stdout != vault_version
+
+- name: Download Vault Software
+  unarchive:
+    src: "{{ vault_zip_url }}"
+    dest: /opt/vault/bin
+    remote_src: yes
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0750
+  when: vault_version_check.stdout != vault_version
+
+- name: Copy Server Config
+  template:
+    src: vault_main.hcl.j2
+    dest: /etc/vault.d/vault_main.hcl
+    owner: "{{ vault_user }}"
+    group: "{{ vault_group }}"
+    mode: 0640
+    backup: yes
+
+- name: Check if cap_ipc_lock is set
+  shell: >
+         getcap /opt/vault/bin/vault |cut -d' ' -f3
+  register: cap_check
+  changed_when: cap_check.stdout != 'cap_ipc_lock+ep'
+
+- name: Enable non root mlock capability
+  command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
+  when: cap_check.stdout != 'cap_ipc_lock+ep'
+
+- name: Copy Startup Script (systemd)
+  template:
+    src: vault.service.j2
+    dest: /etc/systemd/system/vault.service
+    owner: "root"
+    group: "root"
+    mode: 0750
+    backup: no
+  notify:
+    - enable vault
+  when: ansible_service_mgr == 'systemd'
+
+- name: Copy Startup Script
+  template:
+    src: vault_sysvinit.j2
+    dest: /etc/init.d/vault
+    owner: "root"
+    group: "root"
+    mode: 0750
+    backup: no
+  notify:
+    - enable vault
+  when: ansible_service_mgr == 'upstart'
