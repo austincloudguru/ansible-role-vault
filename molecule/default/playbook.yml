@@ -216,5 +216,5 @@
       -----END RSA PRIVATE KEY-----
 
   roles:
-    - role: ansible-role-consul
+    - role: austincloudguru.consul
     - role: ansible-role-vault
