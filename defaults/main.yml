@@ -8,7 +8,7 @@ vault_user: "vault"
 vault_uid: "10012"
 
 # Vault Application
-vault_version: "0.10.4"
+vault_version: "0.11.1"
 
 # Vault Config
 vault_consul: "127.0.0.1:8500"
