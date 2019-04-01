@@ -71,8 +71,13 @@
     state: directory
 
 - name: Check Version Installed
-  shell: >
-         /opt/vault/bin/vault --version|head -1 |cut -dv -f2|cut -d' ' -f1
+  shell: |
+         set -o pipefail
+         if [ -f /opt/vault/bin/vault ]; then
+           /opt/vault/bin/vault --version|awk 'NR==1{print $2}' |cut -dv -f2|cut -d' ' -f1
+         fi
+  args:
+    executable: /bin/bash
   register: vault_version_check
   changed_when: vault_version_check.stdout != vault_version
 
@@ -96,8 +101,11 @@
     backup: yes
 
 - name: Check if cap_ipc_lock is set
-  shell: >
+  shell: |
+         set -o pipefail
          getcap /opt/vault/bin/vault |cut -d' ' -f3
+  args:
+    executable: /bin/bash
   register: cap_check
   changed_when: cap_check.stdout != 'cap_ipc_lock+ep'
 
