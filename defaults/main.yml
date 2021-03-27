@@ -17,4 +17,4 @@ vault_address: "0.0.0.0"
 vault_port: "8200"
 
 # Start Vault
-vault_start: True
+vault_start: true
