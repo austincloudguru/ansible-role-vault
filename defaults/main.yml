@@ -8,7 +8,7 @@ vault_user: "vault"
 vault_uid: "10012"
 
 # Vault Application
-vault_version: "1.5.4"
+vault_version: "1.7.0"
 
 # Vault Config
 vault_consul: "127.0.0.1:8500"
@@ -17,4 +17,4 @@ vault_address: "0.0.0.0"
 vault_port: "8200"
 
 # Start Vault
-vault_start: True
+vault_start: true
