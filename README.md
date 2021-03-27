@@ -1,6 +1,6 @@
 ansible-role-vault
 ==================
-[![Build Status](https://travis-ci.org/AustinCloudGuru/ansible-role-vault.svg?branch=master)](https://travis-ci.org/AustinCloudGuru/ansible-role-vault)
+[![CI](https://github.com/austincloudguru/ansible-role-vault/workflows/CI/badge.svg?event=push)](https://github.com/austincloudguru/ansible-role-vault/actions?query=workflow%3ACI)
 
 This role installs vault server in AWS.
 
