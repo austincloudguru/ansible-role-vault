@@ -1,6 +1,9 @@
 ansible-role-vault
 ==================
-[![CI](https://github.com/austincloudguru/ansible-role-vault/workflows/CI/badge.svg?event=push)](https://github.com/austincloudguru/ansible-role-vault/actions?query=workflow%3ACI)
+[![Molecule](https://github.com/austincloudguru/ansible-role-vault/workflows/Molecule/badge.svg?event=push)](https://github.com/austincloudguru/ansible-role-vault/actions?query=workflow%3AMolecule)
+![Latest Version](https://img.shields.io/github/v/tag/austincloudguru/ansible-role-vault?sort=semver&label=Latest%20Version)
+[![License](https://img.shields.io/github/license/austincloudguru/ansible-role-vault)](https://github.com/austincloudguru/ansible-role-vault/blob/master/LICENSE)
+
 
 This role installs vault server in AWS.
 
