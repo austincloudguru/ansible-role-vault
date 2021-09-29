@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   role_name: vault
+  namespace: austincloudguru
   author: Mark Honomichl
   description: Installs Vault Server
   company: AustinCloudGuru
