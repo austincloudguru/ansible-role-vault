@@ -1,19 +1,19 @@
 ---
 - name: Create Vault group
-  group:
+  ansible.builtin.group:
     name: "{{ vault_group }}"
     gid: "{{ vault_gid }}"
     state: present
 
 - name: Create Vault User
-  user:
+  ansible.builtin.user:
     name: "{{ vault_user }}"
     group: "{{ vault_group }}"
     uid: "{{ vault_uid }}"
     state: present
 
 - name: Create Configuration Directories
-  file:
+  ansible.builtin.file:
     path: /etc/vault.d
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
@@ -21,7 +21,7 @@
     state: directory
 
 - name: Create ssl Directories
-  file:
+  ansible.builtin.file:
     path: /etc/vault.d/ssl
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
@@ -29,7 +29,7 @@
     state: directory
 
 - name: Copy Cert File
-  copy:
+  ansible.builtin.copy:
     content: "{{ vault_cert }}"
     dest: /etc/vault.d/ssl/vault.cert
     owner: "{{ vault_user }}"
@@ -38,7 +38,7 @@
     backup: yes
 
 - name: Copy Cert Key
-  copy:
+  ansible.builtin.copy:
     content: "{{ vault_key }}"
     dest: /etc/vault.d/ssl/vault.key
     owner: "{{ vault_user }}"
@@ -47,7 +47,7 @@
     backup: yes
 
 - name: Create Vault Data Directory
-  file:
+  ansible.builtin.file:
     path: /var/vault
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
@@ -55,7 +55,7 @@
     state: directory
 
 - name: Create Vault Directory
-  file:
+  ansible.builtin.file:
     path: /opt/vault/bin
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
@@ -63,7 +63,7 @@
     state: directory
 
 - name: Create Vault Log Directory
-  file:
+  ansible.builtin.file:
     path: /var/log/vault
     owner: "{{ vault_user }}"
     group: "{{ vault_group }}"
@@ -71,7 +71,7 @@
     state: directory
 
 - name: Check Version Installed
-  shell: |
+  ansible.builtin.shell: |
          set -o pipefail
          if [ -f /opt/vault/bin/vault ]; then
            /opt/vault/bin/vault --version|awk 'NR==1{print $2}' |cut -dv -f2|cut -d' ' -f1
@@ -82,7 +82,7 @@
   changed_when: vault_version_check.stdout != vault_version
 
 - name: Download Vault Software
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ vault_zip_url }}"
     dest: /opt/vault/bin
     remote_src: yes
@@ -92,7 +92,7 @@
   when: vault_version_check.stdout != vault_version
 
 - name: Copy Server Config
-  template:
+  ansible.builtin.template:
     src: vault_main.hcl.j2
     dest: /etc/vault.d/vault_main.hcl
     owner: "{{ vault_user }}"
@@ -101,7 +101,7 @@
     backup: yes
 
 - name: Check if cap_ipc_lock is set
-  shell: |
+  ansible.builtin.shell: |
          set -o pipefail
          getcap /opt/vault/bin/vault |cut -d' ' -f3
   args:
@@ -110,11 +110,11 @@
   changed_when: cap_check.stdout != 'cap_ipc_lock+ep'
 
 - name: Enable non root mlock capability
-  command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
+  ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
   when: cap_check.stdout != 'cap_ipc_lock+ep'
 
 - name: Copy Startup Script (systemd)
-  template:
+  ansible.builtin.template:
     src: vault.service.j2
     dest: /etc/systemd/system/vault.service
     owner: "root"
@@ -126,7 +126,7 @@
   when: ansible_service_mgr == 'systemd'
 
 - name: Copy Startup Script
-  template:
+  ansible.builtin.template:
     src: vault_sysvinit.j2
     dest: /etc/init.d/vault
     owner: "root"

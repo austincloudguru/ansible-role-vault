@@ -1,6 +1,6 @@
 ---
 - name: enable vault
-  service:
+  ansible.builtin.service:
     name: vault
     enabled: yes
     state: started
