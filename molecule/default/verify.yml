@@ -3,7 +3,8 @@
   hosts: all
   gather_facts: false
   vars:
-    service_name: splunkd.service
+    vault_service: vault.service
+    consul_service: consul.service
   vars_files:
     - "../../defaults/main.yml"
   tasks:
@@ -33,18 +34,18 @@
     - name: Gather service facts
       ansible.builtin.service_facts:
 
-    - name: Print service facts
-      ansible.builtin.debug:
-        var: ansible_facts.services
-
     - name: Assert Results
       ansible.builtin.assert:
         that:
           - getent_passwd.vault is defined
+          - getent_passwd.consul is defined
           - getent_group.vault is defined
+          - getent_group.consul is defined
+          - reg_vault_config.stat.exists
           - reg_vault_config.stat.exists
           - reg_vault_binary.stat.exists
           - reg_vault_log.stat.exists
           - reg_vault_log.stat.isdir
-          - ansible_facts.services["{{ service_name }}"]["state"] == "running"
+          - ansible_facts.services["{{ vault_service }}"]["state"] == "running"
+          - ansible_facts.services["{{ consul_service }}"]["state"] == "running"
         quiet: true
