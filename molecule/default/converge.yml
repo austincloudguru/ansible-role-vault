@@ -1,6 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  become: true
   vars:
     consul_role: client
     consul_datacenter: "us-east-1"
