@@ -1,7 +1,7 @@
 ---
 dependency:
   name: galaxy
-  option:
+  options:
     role-path: ~/.ansible/roles
 driver:
   name: docker
