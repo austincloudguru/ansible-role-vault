@@ -14,6 +14,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     command: /lib/systemd/systemd
+    ANSIBLE_ROLES_PATH: $ANSIBLE_ROLES_PATH:${MOLECULE_EPHEMERAL_DIRECTORY}
 provisioner:
   name: ansible
 verifier:
