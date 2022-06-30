@@ -15,4 +15,5 @@ galaxy_info:
       versions:
         - all
   galaxy_tags: [vault]
-dependencies: [austincloudguru.consul]
+dependencies:
+  - role: austincloudguru.consul
