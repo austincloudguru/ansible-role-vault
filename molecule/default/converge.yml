@@ -217,4 +217,4 @@
 
   roles:
     - austincloudguru.consul
-    - austincloudguru.vault
+    # - austincloudguru.vault
