@@ -113,7 +113,7 @@
 
     - name: Enable non root mlock capability
       ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
-      when: (deb_cap_check.stdout != 'cap_ipc_lock+ep')
+      when: cap_check.stdout != 'cap_ipc_lock+ep'
   when: ansible_os_family == "Debian"
 
 - name: Check that cap_ipc_lock is set (EL)
@@ -129,7 +129,7 @@
 
     - name: Enable non root mlock capability
       ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
-      when: (deb_cap_check.stdout != 'cap_ipc_lock=ep')
+      when: cap_check.stdout != 'cap_ipc_lock=ep'
   when: ansible_os_family == "RedHat"
 
 - name: Copy Startup Script (systemd)
