@@ -220,5 +220,5 @@
       ansible.builtin.include_role:
         name: austincloudguru.consul
   roles:
-    - austincloudguru.consul
+    - role: austincloudguru.consul
     # - austincloudguru.vault
