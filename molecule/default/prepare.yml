@@ -80,6 +80,5 @@
       KBn9wSWwYRXmLICv7s6GrsYMoOFit4FrXQdj42hzqpGugXbAlOTknV6KZbwptSuG
       lEhOBOqUfdiXqUszPbSsRtFpmA+hA0vT
       -----END CERTIFICATE-----
-
   roles:
     - role: austincloudguru.consul
