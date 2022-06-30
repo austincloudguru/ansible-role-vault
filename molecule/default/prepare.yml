@@ -214,7 +214,7 @@
       G382XbV41zqZQTkCOGtSWxa03UrVlFNkrmU3z1pqvDvipbjPpFeNQ65jH48Gv5r7
       7DMu1O5xQK1Z0hNF7Spm2+Y+FIcOR9hRxEYo4a3v+tvHElvawNCjBJg=
       -----END RSA PRIVATE KEY-----
-
-  roles:
-    - austincloudguru.consul
-    # - austincloudguru.vault
+  tasks:
+    - name: Include Consul Role
+      ansible.builtin.include_role:
+        name: austincloudguru.consul
