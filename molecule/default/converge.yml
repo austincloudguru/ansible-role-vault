@@ -1,6 +1,7 @@
 ---
 - name: Converge
   hosts: all
+  become: true
   vars:
     consul_role: client
     consul_datacenter: "us-east-1"
@@ -214,7 +215,6 @@
       G382XbV41zqZQTkCOGtSWxa03UrVlFNkrmU3z1pqvDvipbjPpFeNQ65jH48Gv5r7
       7DMu1O5xQK1Z0hNF7Spm2+Y+FIcOR9hRxEYo4a3v+tvHElvawNCjBJg=
       -----END RSA PRIVATE KEY-----
-
   roles:
     - role: austincloudguru.consul
-    - role: ansible-role-vault
+    - role: austincloudguru.vault

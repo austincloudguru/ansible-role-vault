@@ -3,5 +3,5 @@ skip_list:
   - '106'
 
 mock_roles:
-  - ansible-role-vault
+  - austincloudguru.vault
   - austincloudguru.consul

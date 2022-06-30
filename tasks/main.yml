@@ -100,18 +100,37 @@
     mode: 0640
     backup: yes
 
-- name: Check if cap_ipc_lock is set
-  ansible.builtin.shell: |
-         set -o pipefail
-         getcap /opt/vault/bin/vault |cut -d' ' -f3
-  args:
-    executable: /bin/bash
-  register: cap_check
-  changed_when: cap_check.stdout != 'cap_ipc_lock+ep'
+- name: Check that cap_ipc_lock is set
+  block:
+    - name: Get cap_ipc_lock Status
+      ansible.builtin.shell: |
+            set -o pipefail
+            getcap /opt/vault/bin/vault |cut -d' ' -f3
+      args:
+        executable: /bin/bash
+      register: cap_check
+      changed_when: cap_check.stdout != 'cap_ipc_lock+ep'
 
-- name: Enable non root mlock capability
-  ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
-  when: cap_check.stdout != 'cap_ipc_lock+ep'
+    - name: Enable non root mlock capability
+      ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
+      when: cap_check.stdout != 'cap_ipc_lock+ep'
+  when: ansible_distribution != "Amazon"
+
+- name: Check that cap_ipc_lock is set (Amazon)
+  block:
+    - name: Get cap_ipc_lock Status
+      ansible.builtin.shell: |
+            set -o pipefail
+            getcap /opt/vault/bin/vault |cut -d' ' -f2
+      args:
+        executable: /bin/bash
+      register: cap_check
+      changed_when: cap_check.stdout != 'cap_ipc_lock=ep'
+
+    - name: Enable non root mlock capability
+      ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
+      when: cap_check.stdout != 'cap_ipc_lock=ep'
+  when: ansible_distribution == "Amazon"
 
 - name: Copy Startup Script (systemd)
   ansible.builtin.template:
