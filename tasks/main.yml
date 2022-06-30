@@ -100,7 +100,7 @@
     mode: 0640
     backup: yes
 
-- name: Check that cap_ipc_lock is set (Debian)
+- name: Check that cap_ipc_lock is set
   block:
     - name: Get cap_ipc_lock Status
       ansible.builtin.shell: |
@@ -114,9 +114,9 @@
     - name: Enable non root mlock capability
       ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
       when: cap_check.stdout != 'cap_ipc_lock+ep'
-  when: ansible_os_family == "Debian"
+  when: ansible_distribution != "Amazon"
 
-- name: Check that cap_ipc_lock is set (EL)
+- name: Check that cap_ipc_lock is set (Amazon)
   block:
     - name: Get cap_ipc_lock Status
       ansible.builtin.shell: |
@@ -130,7 +130,7 @@
     - name: Enable non root mlock capability
       ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
       when: cap_check.stdout != 'cap_ipc_lock=ep'
-  when: ansible_os_family == "RedHat"
+  when: ansible_distribution == "Amazon"
 
 - name: Copy Startup Script (systemd)
   ansible.builtin.template:
