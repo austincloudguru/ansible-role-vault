@@ -1,0 +1,50 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    service_name: splunkd.service
+  vars_files:
+    - "../../defaults/main.yml"
+  tasks:
+    - name: Get the Groups
+      ansible.builtin.getent:
+        database: group
+
+    - name: Get the Users
+      ansible.builtin.getent:
+        database: passwd
+
+    - name: Verify Vault configuration exists
+      ansible.builtin.stat:
+        path: /etc/vault.d/vault_main.hcl
+      register: reg_vault_config
+
+    - name: Verify Vault binary exists
+      ansible.builtin.stat:
+        path: /var/vault/bin/vault
+      register: reg_vault_binary
+
+    - name: Verify Vault Log Directory exists
+      ansible.builtin.stat:
+        path: /var/log/vault
+      register: reg_vault_log
+
+    - name: Gather service facts
+      ansible.builtin.service_facts:
+
+    - name: Print service facts
+      ansible.builtin.debug:
+        var: ansible_facts.services
+
+    - name: Assert Results
+      ansible.builtin.assert:
+        that:
+          - getent_passwd.vault is defined
+          - getent_group.vault is defined
+          - reg_vault_config.stat.exists
+          - reg_vault_binary.stat.exists
+          - reg_vault_log.stat.exists
+          - reg_vault_log.stat.isdir
+          - ansible_facts.services["{{ service_name }}"]["state"] == "running"
+        quiet: true
