@@ -106,12 +106,23 @@
          getcap /opt/vault/bin/vault |cut -d' ' -f3
   args:
     executable: /bin/bash
+  when: ansible_os_family == "Debian"
   register: cap_check
   changed_when: cap_check.stdout != 'cap_ipc_lock+ep'
 
+- name: Check if cap_ipc_lock is set
+  ansible.builtin.shell: |
+         set -o pipefail
+         getcap /opt/vault/bin/vault |cut -d' ' -f2
+  args:
+    executable: /bin/bash
+  when: ansible_os_family == "RedHat"
+  register: cap_check
+  changed_when: cap_check.stdout != 'cap_ipc_lock=ep'
+
 - name: Enable non root mlock capability
   ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
-  when: cap_check.stdout != 'cap_ipc_lock+ep'
+  when: cap_check.stdout != 'cap_ipc_lock+ep' or cap_check.stdout != 'cap_ipc_lock=ep'
 
 - name: Copy Startup Script (systemd)
   ansible.builtin.template:
