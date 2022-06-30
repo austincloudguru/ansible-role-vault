@@ -23,7 +23,7 @@
 
     - name: Verify Vault binary exists
       ansible.builtin.stat:
-        path: /var/vault/bin/vault
+        path: /opt/vault/bin/vault
       register: reg_vault_binary
 
     - name: Verify Vault Log Directory exists
