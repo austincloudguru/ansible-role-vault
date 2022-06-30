@@ -217,4 +217,4 @@
 
   roles:
     - role: austincloudguru.consul
-    - role: ansible-role-vault
+    - role: austincloudguru.vault
