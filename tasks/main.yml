@@ -108,7 +108,7 @@
     executable: /bin/bash
   when: ansible_os_family == "Debian"
   register: deb_cap_check
-  changed_when: cap_check.stdout != 'cap_ipc_lock+ep'
+  changed_when: deb_cap_check.stdout != 'cap_ipc_lock+ep'
 
 - name: Check if cap_ipc_lock is set (EL Based)
   ansible.builtin.shell: |
@@ -118,7 +118,7 @@
     executable: /bin/bash
   when: ansible_os_family == "RedHat"
   register: el_cap_check
-  changed_when: cap_check.stdout != 'cap_ipc_lock=ep'
+  changed_when: el_cap_check.stdout != 'cap_ipc_lock=ep'
 
 - name: Enable non root mlock capability
   ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
