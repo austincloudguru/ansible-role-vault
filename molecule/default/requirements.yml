@@ -1,3 +1,2 @@
 ---
-roles:
-  - name: austincloudguru.consul
+- src: austincloudguru.consul
