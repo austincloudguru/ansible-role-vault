@@ -217,4 +217,4 @@
       -----END RSA PRIVATE KEY-----
   roles:
     - role: austincloudguru.consul
-    # - austincloudguru.vault
+    - role: austincloudguru.vault
