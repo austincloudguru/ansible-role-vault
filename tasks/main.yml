@@ -141,7 +141,7 @@
     mode: 0750
     backup: no
   notify:
-    - enable vault
+    - Enable vault
   when: ansible_service_mgr == 'systemd'
 
 - name: Copy Startup Script
@@ -153,5 +153,5 @@
     mode: 0750
     backup: no
   notify:
-    - enable vault
+    - Enable vault
   when: ansible_service_mgr == 'upstart'

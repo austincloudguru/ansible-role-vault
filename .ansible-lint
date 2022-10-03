@@ -1,6 +1,7 @@
 ---
 skip_list:
-  - '106'
+  - template-instead-of-copy
+  - experimental
 
 mock_roles:
   - austincloudguru.vault
