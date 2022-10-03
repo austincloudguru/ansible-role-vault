@@ -1,7 +1,7 @@
 ---
-- name: enable vault
+- name: Enable vault
   ansible.builtin.service:
     name: vault
     enabled: yes
     state: started
-  when: vault_start|bool
+  when: vault_start | bool
