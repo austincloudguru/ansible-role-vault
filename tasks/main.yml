@@ -74,7 +74,7 @@
   ansible.builtin.shell: |
          set -o pipefail
          if [ -f /opt/vault/bin/vault ]; then
-           /opt/vault/bin/vault --version|awk 'NR==1{print $2}' |cut -dv -f2|cut -d' ' -f1
+           /opt/vault/bin/vault --version|awk 'NR==1{print $2}' |cut -dv -f2|cut -d ' ' -f1
          fi
   args:
     executable: /bin/bash
@@ -105,7 +105,7 @@
     - name: Get cap_ipc_lock Status
       ansible.builtin.shell: |
             set -o pipefail
-            getcap /opt/vault/bin/vault |cut -d' ' -f3
+            getcap /opt/vault/bin/vault |cut -d ' ' -f3
       args:
         executable: /bin/bash
       register: cap_check
@@ -114,14 +114,14 @@
     - name: Enable non root mlock capability
       ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
       when: cap_check.stdout != 'cap_ipc_lock+ep'
-  when: ansible_distribution != "Amazon" or ansible_distribution != "OracleLinux"
+  when: ansible_distribution != "Amazon" and ansible_distribution != "OracleLinux"
 
 - name: Check that cap_ipc_lock is set (Amazon)
   block:
     - name: Get cap_ipc_lock Status
       ansible.builtin.shell: |
             set -o pipefail
-            getcap /opt/vault/bin/vault |cut -d' ' -f2
+            getcap /opt/vault/bin/vault |cut -d ' ' -f2
       args:
         executable: /bin/bash
       register: cap_check
@@ -130,7 +130,7 @@
     - name: Enable non root mlock capability
       ansible.builtin.command: "setcap cap_ipc_lock=+ep /opt/vault/bin/vault"
       when: cap_check.stdout != 'cap_ipc_lock=ep'
-  when: ansible_distribution == "Amazon"
+  when: ansible_distribution == "Amazon" or ansible_distribution == "OracleLinux"
 
 - name: Copy Startup Script (systemd)
   ansible.builtin.template:
