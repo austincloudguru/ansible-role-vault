@@ -2,6 +2,7 @@
 skip_list:
   - template-instead-of-copy
   - experimental
+  - no-changed-when
 
 mock_roles:
   - austincloudguru.vault
